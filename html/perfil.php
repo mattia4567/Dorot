@@ -4,8 +4,23 @@ session_start();
 
 if (!isset($_SESSION["usuario_id"])) {
     header("Location: login.php");
-    exit;
+    exit();
 }
+
+require_once "conexion.php";
+
+$id = $_SESSION["usuario_id"];
+
+$sql = "SELECT username, email, fecha_registro
+        FROM usuarios
+        WHERE id = ?";
+
+$stmt = $conexion->prepare($sql);
+$stmt->bind_param("i", $id);
+$stmt->execute();
+
+$resultado = $stmt->get_result();
+$usuario = $resultado->fetch_assoc();
 
 ?>
 
@@ -14,36 +29,37 @@ if (!isset($_SESSION["usuario_id"])) {
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi perfil - Jewchetti Secret</title>
-    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
-    <main>
+    <h1>Mi perfil</h1>
 
-        <h1>Mi perfil</h1>
+    <h2>Bienvenido, <?php echo htmlspecialchars($usuario["username"]); ?>!</h2>
 
-        <p>
-            Bienvenido/a,
-            <strong>
-                <?php echo htmlspecialchars($_SESSION["nombre"]); ?>
-            </strong>
-        </p>
+    <p>
+        <strong>Usuario:</strong>
+        <?php echo htmlspecialchars($usuario["username"]); ?>
+    </p>
 
-        <p>
-            Email:
-            <?php echo htmlspecialchars($_SESSION["email"]); ?>
-        </p>
+    <p>
+        <strong>Email:</strong>
+        <?php echo htmlspecialchars($usuario["email"]); ?>
+    </p>
 
-        <a href="index.php">Volver a la tienda</a>
+    <p>
+        <strong>Fecha de registro:</strong>
+        <?php echo $usuario["fecha_registro"]; ?>
+    </p>
 
-        <br><br>
+    <br>
 
-        <a href="cerrar_sesion.php">Cerrar sesión</a>
+    <a href="index.php">Volver a la tienda</a>
 
-    </main>
+    <br><br>
+
+    <a href="cerrar_sesion.php">Cerrar sesión</a>
 
 </body>
 

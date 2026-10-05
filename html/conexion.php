@@ -1,16 +1,16 @@
 <?php
 
-$host = "localhost";
+$servidor = "localhost";
 $usuario = "root";
-$password = "";
+$contraseña = "";
 $base_datos = "jewchetti_secret";
 
-$conn = new mysqli($host, $usuario, $password, $base_datos);
+$conexion = new mysqli($servidor, $usuario, $contraseña, $base_datos);
 
-if ($conn->connect_error) {
-    die("Error de conexión: " . $conn->connect_error);
+if ($conexion->connect_error) {
+    die("Error de conexión: " . $conexion->connect_error);
 }
 
-$conn->set_charset("utf8mb4");
+$conexion->set_charset("utf8mb4");
 
 ?>

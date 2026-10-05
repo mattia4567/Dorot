@@ -6,51 +6,46 @@ require_once "conexion.php";
 
 $mensaje = "";
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $email = trim($_POST["email"]);
+    $username = trim($_POST["username"]);
     $password = $_POST["password"];
 
-    if ($email === "" || $password === "") {
+    $sql = "SELECT id, username, password_hash
+            FROM usuarios
+            WHERE username = ?";
 
-        $mensaje = "Completá todos los campos.";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
 
-    } else {
+    $resultado = $stmt->get_result();
 
-        $consulta = $conn->prepare(
-            "SELECT id, nombre, email, password FROM usuarios WHERE email = ?"
-        );
+    if ($resultado->num_rows == 1) {
 
-        $consulta->bind_param("s", $email);
-        $consulta->execute();
+        $usuario = $resultado->fetch_assoc();
 
-        $resultado = $consulta->get_result();
+        if (password_verify($password, $usuario["password_hash"])) {
 
-        if ($resultado->num_rows === 1) {
+            $_SESSION["usuario_id"] = $usuario["id"];
+            $_SESSION["username"] = $usuario["username"];
 
-            $usuario = $resultado->fetch_assoc();
-
-            if (password_verify($password, $usuario["password"])) {
-
-                $_SESSION["usuario_id"] = $usuario["id"];
-                $_SESSION["nombre"] = $usuario["nombre"];
-                $_SESSION["email"] = $usuario["email"];
-
-                header("Location: index.php");
-                exit;
-
-            } else {
-
-                $mensaje = "Contraseña incorrecta.";
-            }
+            header("Location: perfil.php");
+            exit();
 
         } else {
 
-            $mensaje = "No existe una cuenta con ese email.";
+            $mensaje = "Contraseña incorrecta.";
+
         }
 
-        $consulta->close();
+    } else {
+
+        $mensaje = "El usuario no existe.";
+
     }
+
+    $stmt->close();
 }
 
 ?>
@@ -60,43 +55,36 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar sesión - Jewchetti Secret</title>
-    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
-    <main>
+    <h1>Iniciar sesión</h1>
 
-        <h1>Iniciar sesión</h1>
+    <?php if ($mensaje != ""): ?>
+        <p><?php echo $mensaje; ?></p>
+    <?php endif; ?>
 
-        <?php if (isset($_GET["registro"]) && $_GET["registro"] === "exitoso"): ?>
-            <p>Cuenta creada correctamente. Ahora podés iniciar sesión.</p>
-        <?php endif; ?>
+    <form method="POST">
 
-        <?php if ($mensaje !== ""): ?>
-            <p><?php echo htmlspecialchars($mensaje); ?></p>
-        <?php endif; ?>
+        <label>Usuario:</label>
+        <input type="text" name="username" required>
 
-        <form method="POST" action="login.php">
+        <br><br>
 
-            <label>Email</label>
-            <input type="email" name="email" required>
+        <label>Contraseña:</label>
+        <input type="password" name="password" required>
 
-            <label>Contraseña</label>
-            <input type="password" name="password" required>
+        <br><br>
 
-            <button type="submit">Iniciar sesión</button>
+        <button type="submit">Iniciar sesión</button>
 
-        </form>
+    </form>
 
-        <p>
-            ¿No tenés una cuenta?
-            <a href="registro.php">Crear cuenta</a>
-        </p>
+    <br>
 
-    </main>
+    <a href="registro.php">Crear una cuenta</a>
 
 </body>
 

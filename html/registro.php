@@ -4,60 +4,40 @@ require_once "conexion.php";
 
 $mensaje = "";
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $nombre = trim($_POST["nombre"]);
+    $username = trim($_POST["username"]);
     $email = trim($_POST["email"]);
     $password = $_POST["password"];
-    $confirmar_password = $_POST["confirmar_password"];
 
-    if ($nombre === "" || $email === "" || $password === "" || $confirmar_password === "") {
+    if ($username == "" || $email == "" || $password == "") {
 
         $mensaje = "Completá todos los campos.";
 
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-
-        $mensaje = "Ingresá un email válido.";
-
-    } elseif ($password !== $confirmar_password) {
-
-        $mensaje = "Las contraseñas no coinciden.";
-
     } else {
 
-        $consulta = $conn->prepare("SELECT id FROM usuarios WHERE email = ?");
-        $consulta->bind_param("s", $email);
-        $consulta->execute();
-        $resultado = $consulta->get_result();
+        $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
-        if ($resultado->num_rows > 0) {
+        $sql = "INSERT INTO usuarios (username, email, password_hash)
+                VALUES (?, ?, ?)";
 
-            $mensaje = "Ese email ya está registrado.";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("sss", $username, $email, $password_hash);
+
+        if ($stmt->execute()) {
+
+            $mensaje = "Cuenta creada correctamente.";
 
         } else {
 
-            $password_hash = password_hash($password, PASSWORD_DEFAULT);
-
-            $insertar = $conn->prepare(
-                "INSERT INTO usuarios (nombre, email, password) VALUES (?, ?, ?)"
-            );
-
-            $insertar->bind_param("sss", $nombre, $email, $password_hash);
-
-            if ($insertar->execute()) {
-
-                header("Location: login.php?registro=exitoso");
-                exit;
-
+            if ($conexion->errno == 1062) {
+                $mensaje = "El usuario o email ya existe.";
             } else {
-
-                $mensaje = "Ocurrió un error al crear la cuenta.";
+                $mensaje = "Error al crear la cuenta.";
             }
-
-            $insertar->close();
         }
 
-        $consulta->close();
+        $stmt->close();
     }
 }
 
@@ -68,45 +48,41 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear cuenta - Jewchetti Secret</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Registrarse - Jewchetti Secret</title>
 </head>
 
 <body>
 
-    <main>
+    <h1>Crear cuenta</h1>
 
-        <h1>Crear cuenta</h1>
+    <?php if ($mensaje != ""): ?>
+        <p><?php echo $mensaje; ?></p>
+    <?php endif; ?>
 
-        <?php if ($mensaje !== ""): ?>
-            <p><?php echo htmlspecialchars($mensaje); ?></p>
-        <?php endif; ?>
+    <form method="POST">
 
-        <form method="POST" action="registro.php">
+        <label>Usuario:</label>
+        <input type="text" name="username" required>
 
-            <label>Nombre</label>
-            <input type="text" name="nombre" required>
+        <br><br>
 
-            <label>Email</label>
-            <input type="email" name="email" required>
+        <label>Email:</label>
+        <input type="email" name="email" required>
 
-            <label>Contraseña</label>
-            <input type="password" name="password" required>
+        <br><br>
 
-            <label>Confirmar contraseña</label>
-            <input type="password" name="confirmar_password" required>
+        <label>Contraseña:</label>
+        <input type="password" name="password" required>
 
-            <button type="submit">Crear cuenta</button>
+        <br><br>
 
-        </form>
+        <button type="submit">Registrarse</button>
 
-        <p>
-            ¿Ya tenés una cuenta?
-            <a href="login.php">Iniciar sesión</a>
-        </p>
+    </form>
 
-    </main>
+    <br>
+
+    <a href="login.php">Ya tengo una cuenta</a>
 
 </body>
 
