@@ -149,7 +149,7 @@
 
       <div id="panel-login" class="panel-forma">
         <h3>Iniciar sesión</h3>
-        <form onsubmit="event.preventDefault(); loginUsuario(this);">
+        <form action="login.php" method="POST">
           <label for="login-email">Email</label>
           <input
             type="email"
@@ -413,5 +413,7 @@
       cerrarPanelAuth();
     }
   </script>
+
+
 </body>
 </html>
