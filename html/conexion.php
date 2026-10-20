@@ -1,5 +1,7 @@
 <?php
 
+mysqli_report(MYSQLI_REPORT_OFF);
+
 $servidor = "localhost";
 $usuario = "root";
 $contraseña = "";

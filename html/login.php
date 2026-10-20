@@ -8,15 +8,15 @@ $mensaje = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $username = trim($_POST["username"]);
-    $password = $_POST["password"];
+    $identificador = trim($_POST["username"] ?? $_POST["email"] ?? "");
+    $password = $_POST["password"] ?? "";
 
     $sql = "SELECT id, username, password_hash
             FROM usuarios
-            WHERE username = ?";
+            WHERE username = ? OR email = ?";
 
     $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("s", $username);
+    $stmt->bind_param("ss", $identificador, $identificador);
     $stmt->execute();
 
     $resultado = $stmt->get_result();
@@ -27,10 +27,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (password_verify($password, $usuario["password_hash"])) {
 
+            session_regenerate_id(true);
+
             $_SESSION["usuario_id"] = $usuario["id"];
             $_SESSION["username"] = $usuario["username"];
 
-            header("Location: perfil.php");
+            $permitidos = ["index.html", "index.php", "perfil.php"];
+
+            $retorno = $_POST["retorno"] ?? "index.html";
+
+            if (!in_array($retorno, $permitidos, true)) {
+                $retorno = "index.html";
+            }
+
+            header("Location: " . $retorno);
             exit();
 
         } else {
@@ -67,6 +77,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php endif; ?>
 
     <form method="POST">
+
+        <input type="hidden" name="retorno" value="index.html">
 
         <label>Usuario:</label>
         <input type="text" name="username" required>

@@ -55,7 +55,7 @@ $usuario = $resultado->fetch_assoc();
 
     <br>
 
-    <a href="index.php">Volver a la tienda</a>
+    <a href="index.html">Volver a la tienda</a>
 
     <br><br>
 

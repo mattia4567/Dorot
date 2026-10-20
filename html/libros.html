@@ -173,6 +173,43 @@
   </div>
   <script>
     let carrito = [];
+    try {
+      carrito = JSON.parse(localStorage.getItem("carritoDorot")) || [];
+    } catch (e) {
+      carrito = [];
+    }
+    document.getElementById("contador").textContent = carrito.length;
+    let sesionIniciada = false;
+    function guardarCarritoEnServidor() {
+      if (!sesionIniciada) return;
+      fetch("api_carrito.php?accion=guardar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: carrito })
+      }).catch(function () {});
+    }
+    function sincronizarCarrito() {
+      fetch("api_carrito.php?accion=cargar")
+        .then(function (r) { return r.json(); })
+        .then(function (datos) {
+          if (!datos.logueado) return;
+          sesionIniciada = true;
+          const servidor = datos.items || [];
+          const unidos = servidor.slice();
+          carrito.forEach(function (item) {
+            const existe = unidos.some(function (i) {
+              return i.nombre === item.nombre && i.precio === item.precio;
+            });
+            if (!existe) unidos.push(item);
+          });
+          carrito = unidos;
+          localStorage.setItem("carritoDorot", JSON.stringify(carrito));
+          document.getElementById("contador").textContent = carrito.length;
+          if (carrito.length !== servidor.length) guardarCarritoEnServidor();
+        })
+        .catch(function () {});
+    }
+    sincronizarCarrito();
     function agregarCarrito(btn) {
       const articulo =
         btn.closest(".producto");
@@ -184,6 +221,8 @@
         nombre: nombre,
         precio: precio
       });
+      localStorage.setItem("carritoDorot", JSON.stringify(carrito));
+      guardarCarritoEnServidor();
       document.getElementById(
         "contador"
       ).textContent = carrito.length;
@@ -243,6 +282,8 @@
     }
     function vaciarCarrito() {
       carrito = [];
+      localStorage.setItem("carritoDorot", JSON.stringify(carrito));
+      guardarCarritoEnServidor();
       document.getElementById(
         "contador"
       ).textContent = "0";

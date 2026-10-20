@@ -106,6 +106,20 @@ header {
   background: #ffffff;
 }
 
+.sesion-estado {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.sesion-estado a {
+  color: #0038b8;
+  font-weight: 700;
+}
+
+.sesion-estado a:hover {
+  color: #b08d32;
+}
+
 .carrito {
   padding: 8px 13px;
   background: #0038b8;

@@ -1,18 +1,33 @@
 <?php
 
+session_start();
+
 require_once "conexion.php";
 
 $mensaje = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $username = trim($_POST["username"]);
-    $email = trim($_POST["email"]);
-    $password = $_POST["password"];
+    $username = trim($_POST["username"] ?? "");
+    $email = trim($_POST["email"] ?? "");
+    $password = $_POST["password"] ?? "";
+    $password2 = $_POST["password2"] ?? "";
+
+    $permitidos = ["index.html", "index.php", "login.php"];
+
+    $retorno = $_POST["retorno"] ?? "index.html";
+
+    if (!in_array($retorno, $permitidos, true)) {
+        $retorno = "index.html";
+    }
 
     if ($username == "" || $email == "" || $password == "") {
 
         $mensaje = "Completá todos los campos.";
+
+    } elseif ($password !== $password2) {
+
+        $mensaje = "Las contraseñas no coinciden.";
 
     } else {
 
@@ -26,7 +41,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($stmt->execute()) {
 
-            $mensaje = "Cuenta creada correctamente.";
+            session_regenerate_id(true);
+
+            $_SESSION["usuario_id"] = $conexion->insert_id;
+            $_SESSION["username"] = $username;
+
+            header("Location: " . $retorno);
+            exit();
 
         } else {
 
@@ -61,6 +82,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <form method="POST">
 
+        <input type="hidden" name="retorno" value="index.html">
+
         <label>Usuario:</label>
         <input type="text" name="username" required>
 
@@ -73,6 +96,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <label>Contraseña:</label>
         <input type="password" name="password" required>
+
+        <br><br>
+
+        <label>Repetir contraseña:</label>
+        <input type="password" name="password2" required>
 
         <br><br>
 

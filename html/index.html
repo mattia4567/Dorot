@@ -24,6 +24,7 @@
         </nav>
 
         <div class="header-derecha">
+          <span id="sesion-estado" class="sesion-estado"></span>
           <button
             type="button"
             class="btn-header"
@@ -150,6 +151,7 @@
       <div id="panel-login" class="panel-forma">
         <h3>Iniciar sesión</h3>
         <form action="login.php" method="POST">
+          <input type="hidden" name="retorno" value="index.html">
           <label for="login-email">Email</label>
           <input
             type="email"
@@ -182,12 +184,13 @@
 
       <div id="panel-registro" class="panel-forma oculto-panel">
         <h3>Crear cuenta</h3>
-        <form onsubmit="event.preventDefault(); registrarUsuario(this);">
+        <form action="registro.php" method="POST">
+          <input type="hidden" name="retorno" value="index.html">
           <label for="registro-nombre">Nombre</label>
           <input
             type="text"
             id="registro-nombre"
-            name="nombre"
+            name="username"
             placeholder="Tu nombre"
             required
           />
@@ -276,6 +279,92 @@
   <script>
     let carrito = [];
 
+    try {
+      carrito = JSON.parse(localStorage.getItem("carritoDorot")) || [];
+    } catch (e) {
+      carrito = [];
+    }
+
+    document.getElementById("contador").textContent = carrito.length;
+
+    let sesionIniciada = false;
+
+    function guardarCarritoEnServidor() {
+      if (!sesionIniciada) {
+        return;
+      }
+
+      fetch("api_carrito.php?accion=guardar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: carrito }),
+      }).catch(function () {});
+    }
+
+    function sincronizarCarrito() {
+      fetch("api_carrito.php?accion=cargar")
+        .then(function (respuesta) {
+          return respuesta.json();
+        })
+        .then(function (datos) {
+          if (!datos.logueado) {
+            return;
+          }
+
+          sesionIniciada = true;
+
+          const itemsServidor = datos.items || [];
+          const unidos = itemsServidor.slice();
+
+          carrito.forEach(function (item) {
+            const existe = unidos.some(function (i) {
+              return i.nombre === item.nombre && i.precio === item.precio;
+            });
+
+            if (!existe) {
+              unidos.push(item);
+            }
+          });
+
+          carrito = unidos;
+          localStorage.setItem("carritoDorot", JSON.stringify(carrito));
+          document.getElementById("contador").textContent = carrito.length;
+
+          if (carrito.length !== itemsServidor.length) {
+            guardarCarritoEnServidor();
+          }
+
+          mostrarEstadoSesion(datos.username);
+        })
+        .catch(function () {});
+    }
+
+    function mostrarEstadoSesion(username) {
+      document.getElementById("btnLogin").style.display = "none";
+      document.getElementById("btnCrearCuenta").style.display = "none";
+
+      const estado = document.getElementById("sesion-estado");
+      estado.textContent = "";
+
+      estado.appendChild(
+        document.createTextNode("Hola, " + username + " · ")
+      );
+
+      const enlacePerfil = document.createElement("a");
+      enlacePerfil.href = "perfil.php";
+      enlacePerfil.textContent = "Mi perfil";
+      estado.appendChild(enlacePerfil);
+
+      estado.appendChild(document.createTextNode(" · "));
+
+      const enlaceSalir = document.createElement("a");
+      enlaceSalir.href = "cerrar_sesion.php";
+      enlaceSalir.textContent = "Cerrar sesión";
+      estado.appendChild(enlaceSalir);
+    }
+
+    sincronizarCarrito();
+
     function agregarCarrito(btn) {
       const articulo = btn.closest(".producto");
       const nombre = articulo.dataset.nombre;
@@ -285,6 +374,10 @@
         nombre: nombre,
         precio: precio,
       });
+
+      localStorage.setItem("carritoDorot", JSON.stringify(carrito));
+
+      guardarCarritoEnServidor();
 
       document.getElementById("contador").textContent = carrito.length;
 
@@ -337,6 +430,8 @@
 
     function vaciarCarrito() {
       carrito = [];
+      localStorage.setItem("carritoDorot", JSON.stringify(carrito));
+      guardarCarritoEnServidor();
       document.getElementById("contador").textContent = "0";
       cerrarCarrito();
     }
@@ -388,29 +483,6 @@
 
       registro.classList.add("oculto-panel");
       login.classList.remove("oculto-panel");
-    }
-
-    function loginUsuario(form) {
-      const email = form.email.value.trim();
-      const password = form.password.value;
-
-      alert("Login simulado exitoso para: " + email);
-      cerrarPanelAuth();
-    }
-
-    function registrarUsuario(form) {
-      const nombre = form.nombre.value.trim();
-      const email = form.email.value.trim();
-      const pass1 = form.password.value;
-      const pass2 = form.password2.value;
-
-      if (pass1 !== pass2) {
-        alert("Las contraseñas no coinciden.");
-        return;
-      }
-
-      alert("Cuenta creada (simulada) para: " + nombre + " (" + email + ")");
-      cerrarPanelAuth();
     }
   </script>
 
