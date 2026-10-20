@@ -38,11 +38,7 @@
         Nuestra colección
       </h2>
       <div class="productos">
-        <article
-          class="producto"
-          data-nombre="Remera Estrella de David"
-          data-precio="28500"
-        >
+        <article class="producto">
           <div class="imagen">
             <img
               src="fotos/CollarDavid.png"
@@ -63,11 +59,7 @@
           </button>
 
         </article>
-        <article
-          class="producto"
-          data-nombre="Remera DOROT"
-          data-precio="30000"
-        >
+        <article class="producto">
           <div class="imagen">
             <img
               src="fotos/AHAVA.png"
@@ -87,11 +79,7 @@
             Agregar al carrito
           </button>
         </article>
-        <article
-          class="producto"
-          data-nombre="Remera Israel"
-          data-precio="32000"
-        >
+        <article class="producto">
           <div class="imagen">
             <img
               src="fotos/mezuzah.png"
@@ -214,9 +202,14 @@
       const articulo =
         btn.closest(".producto");
       const nombre =
-        articulo.dataset.nombre;
+        articulo.querySelector("h3").textContent.trim();
       const precio =
-        parseInt(articulo.dataset.precio);
+        Math.round(parseFloat(
+          articulo.querySelector("p").textContent
+            .replace(/[^0-9,.-]/g, "")
+            .replace(/\./g, "")
+            .replace(",", ".")
+        ));
       carrito.push({
         nombre: nombre,
         precio: precio

@@ -367,8 +367,16 @@
 
     function agregarCarrito(btn) {
       const articulo = btn.closest(".producto");
-      const nombre = articulo.dataset.nombre;
-      const precio = parseInt(articulo.dataset.precio);
+      const nombre = articulo.querySelector("h3").textContent.trim();
+      const precio = Math.round(
+        parseFloat(
+          articulo
+            .querySelector("p")
+            .textContent.replace(/[^0-9,.-]/g, "")
+            .replace(/\./g, "")
+            .replace(",", ".")
+        )
+      );
 
       carrito.push({
         nombre: nombre,
