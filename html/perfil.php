@@ -21,6 +21,16 @@ $stmt->execute();
 
 $resultado = $stmt->get_result();
 $usuario = $resultado->fetch_assoc();
+$stmt->close();
+
+if ($usuario === null) {
+
+    session_unset();
+    session_destroy();
+
+    header("Location: login.php");
+    exit();
+}
 
 ?>
 

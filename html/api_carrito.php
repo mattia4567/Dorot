@@ -51,6 +51,18 @@ if ($accion === "guardar" && $_SERVER["REQUEST_METHOD"] === "POST") {
 
     $datos = json_decode(file_get_contents("php://input"), true);
 
+    if (!is_array($datos)) {
+        http_response_code(400);
+
+        echo json_encode([
+            "logueado" => true,
+            "ok" => false,
+            "error" => "JSON inválido.",
+        ]);
+
+        exit();
+    }
+
     $items = (isset($datos["items"]) && is_array($datos["items"]))
         ? $datos["items"]
         : [];
