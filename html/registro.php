@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
 
-    <h1>Crear cuenta</h1>
+    <h1>Crear...... cuenta</h1>
 
     <?php if ($mensaje != ""): ?>
         <p><?php echo $mensaje; ?></p>
@@ -85,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="hidden" name="retorno" value="index.html">
 
         <label>Usuario:</label>
-        <input type="text" name="username" required>
+        <input type="text" name="nombre" required>
 
         <br><br>
 
@@ -95,12 +95,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <br><br>
 
         <label>Contraseña:</label>
-        <input type="password" name="password" required>
+        <input type="password" name="contraseña" required>
 
         <br><br>
 
         <label>Repetir contraseña:</label>
-        <input type="password" name="password2" required>
+        <input type="password" name="repetir contraseña" required>
 
         <br><br>
 
