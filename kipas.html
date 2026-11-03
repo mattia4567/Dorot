@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kipás | Dorot</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="encabezado">
+    <a class="logo" href="index.php">✡ Dorot</a>
+
+    <nav class="navegacion">
+        <a href="index.php">Inicio</a>
+        <a href="remeras.html">Remeras</a>
+        <a class="activo" href="kipas.html">Kipás</a>
+        <a href="joyeria.html">Joyería</a>
+        <a href="login.php">Iniciar sesión</a>
+        <a href="registro.php">Crear cuenta</a>
+
+        <a href="#" class="boton-carrito"
+        onclick="abrirCarrito(); return false;">
+            🛒 Carrito
+            <span class="contador-carrito" id="contador-carrito">0</span>
+        </a>
+    </nav>
+    </header>
+    <main>
+        <section class="productos">
+    <div class="grilla-productos">
+
+        <!-- KIPÁ AZUL -->
+        <article class="tarjeta-producto">
+            <div class="producto-imagen imagen-kipa-1">
+                <span>CLÁSICA</span>
+            </div>
+
+            <div class="producto-info">
+                <h2>Kipá azul</h2>
+                <p>Tela · Diseño liso</p>
+                <strong>$8.000</strong>
+
+                <button class="boton-agregar"
+                    onclick="agregarAlCarrito('Kipá azul', 8000)">
+                    AGREGAR AL CARRITO
+                </button>
+            </div>
+        </article>
+
+        <!-- KIPÁ TEJIDA -->
+        <article class="tarjeta-producto">
+            <div class="producto-imagen imagen-kipa-2">
+                <span>ARTESANAL</span>
+            </div>
+
+            <div class="producto-info">
+                <h2>Kipá tejida</h2>
+                <p>Tejido artesanal · Multicolor</p>
+                <strong>$11.000</strong>
+
+                <button class="boton-agregar"
+                    onclick="agregarAlCarrito('Kipá tejida', 11000)">
+                    AGREGAR AL CARRITO
+                </button>
+            </div>
+        </article>
+
+        <!-- KIPÁ ELEGANTE -->
+        <article class="tarjeta-producto">
+            <div class="producto-imagen imagen-kipa-3">
+                <span>ESPECIAL</span>
+            </div>
+
+            <div class="producto-info">
+                <h2>Kipá elegante</h2>
+                <p>Tela premium · Azul oscuro</p>
+                <strong>$13.500</strong>
+
+                <button class="boton-agregar"
+                    onclick="agregarAlCarrito('Kipá elegante', 13500)">
+                    AGREGAR AL CARRITO
+                </button>
+            </div>
+        </article>
+
+    </div>
+</section>
+    </main>
+    <footer class="pie"><a class="logo" href="index.html">✡ Dorot</a><p>Ropa y accesorios con identidad.</p><span>© 2026 Dorot. Todos los derechos reservados.</span></footer>
+    <!-- ACÁ TERMINA EL CONTENIDO DE TU PÁGINA -->
+
+ <div class="carrito-fondo" id="carrito-fondo"
+     onclick="cerrarCarrito()"></div>
+
+<aside class="carrito-panel" id="carrito-panel">
+
+    <div class="carrito-encabezado">
+        <h2>Mi carrito</h2>
+
+        <button class="carrito-cerrar"
+                onclick="cerrarCarrito()">
+            &times;
+        </button>
+    </div>
+
+    <div id="carrito-productos"></div>
+
+    <div class="carrito-resumen">
+        <div class="carrito-total-fila">
+            <span>Total:</span>
+            <span id="carrito-total">$0</span>
+        </div>
+
+        <button class="carrito-comprar"
+                onclick="finalizarCompra()">
+            FINALIZAR COMPRA
+        </button>
+
+        <button class="carrito-vaciar"
+                onclick="vaciarCarrito()">
+            Vaciar carrito
+        </button>
+    </div>
+
+</aside>
+
+<script src="carrito.js"></script>
+</body>
+</html>
