@@ -1,13 +1,15 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joyería | Dorot</title>
+    <title>Joyería | DOROT</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header class="encabezado">
+
+<header class="encabezado">
     <a class="logo" href="index.php">✡ Dorot</a>
 
     <nav class="navegacion">
@@ -19,77 +21,87 @@
         <a href="registro.php">Crear cuenta</a>
 
         <a href="#" class="boton-carrito"
-        onclick="abrirCarrito(); return false;">
+           onclick="abrirCarrito(); return false;">
             🛒 Carrito
             <span class="contador-carrito" id="contador-carrito">0</span>
         </a>
     </nav>
 </header>
-    <main>
-        <section class="cabecera-pagina">
-            <p class="etiqueta">COLECCIÓN OR</p>
-            <h1>Joyería</h1>
-            <p>Accesorios con detalles inspirados en símbolos y tradición.</p>
-        </section>
-        <section class="productos">
-            <div class="grilla-productos">
-                <article class="tarjeta-producto">
-                    <div class="producto-imagen imagen-joya-1"><span>DESTACADO</span></div>
-                    <div class="producto-info">
-    <h2>Kipá azul</h2>
-    <p>Tela · Diseño liso</p>
-    <strong>$8.000</strong>
 
-    <button class="boton-agregar"
-        onclick="agregarAlCarrito('Kipá azul', 8000)">
-        AGREGAR AL CARRITO
-    </button>
-</div>
-                </article>
-                <article class="tarjeta-producto">
-                    <div class="producto-imagen imagen-joya-2"><span>CLÁSICO</span></div>
-                   <div class="producto-info">
-    <h2>Kipá azul</h2>
-    <p>Tela · Diseño liso</p>
-    <strong>$8.000</strong>
+<main>
+    <section class="cabecera-pagina">
+        <p class="etiqueta">COLECCIÓN DOROT</p>
+        <h1>Joyería</h1>
+        <p>Accesorios con detalles inspirados en símbolos y tradición.</p>
+    </section>
 
-    <button class="boton-agregar"
-        onclick="agregarAlCarrito('Kipá azul', 8000)">
-        AGREGAR AL CARRITO
-    </button>
-</div>
-                </article>
-                <article class="tarjeta-producto">
-                    <div class="producto-imagen imagen-joya-3"><span>NUEVO</span></div>
+    <section class="productos">
+        <div class="grilla-productos">
+
+            <article class="tarjeta-producto">
+                <div class="producto-imagen imagen-joya-1">
+                    <span>DESTACADO</span>
+                </div>
                 <div class="producto-info">
-                <h2>Kipá azul</h2>
-                <p>Tela · Diseño liso</p>
-                <strong>$8.000</strong>
+                    <h2>Collar Estrella de David</h2>
+                    <p>Dije de la Estrella de David</p>
+                    <strong>$15.000</strong>
+                    <button class="boton-agregar"
+                        onclick="agregarAlCarrito(11)">
+                        AGREGAR AL CARRITO
+                    </button>
+                </div>
+            </article>
 
-    <button class="boton-agregar"
-        onclick="agregarAlCarrito('Kipá azul', 8000)">
-        AGREGAR AL CARRITO
-    </button>
-</div>
-                </article>
-            </div>
-        </section>
-    </main>
-    <footer class="pie"><a class="logo" href="index.php">✡ Dorot</a><p>Ropa y accesorios con identidad.</p><span>© 2026 Dorot. Todos los derechos reservados.</span></footer>
-    <!-- ACÁ TERMINA EL CONTENIDO DE TU PÁGINA -->
+            <article class="tarjeta-producto">
+                <div class="producto-imagen imagen-joya-2">
+                    <span>CLÁSICO</span>
+                </div>
+                <div class="producto-info">
+                    <h2>Pulsera de hilo</h2>
+                    <p>Diseño artesanal · Hilo</p>
+                    <strong>$5.000</strong>
+                    <button class="boton-agregar"
+                        onclick="agregarAlCarrito(12)">
+                        AGREGAR AL CARRITO
+                    </button>
+                </div>
+            </article>
 
-    <div class="carrito-fondo" id="carrito-fondo"
+            <article class="tarjeta-producto">
+                <div class="producto-imagen imagen-joya-3">
+                    <span>NUEVO</span>
+                </div>
+                <div class="producto-info">
+                    <h2>Collar JAI</h2>
+                    <p>Dije con símbolo JAI</p>
+                    <strong>$18.000</strong>
+                    <button class="boton-agregar"
+                        onclick="agregarAlCarrito(13)">
+                        AGREGAR AL CARRITO
+                    </button>
+                </div>
+            </article>
+
+        </div>
+    </section>
+</main>
+
+<footer class="pie">
+    <a class="logo" href="index.php">✡ Dorot</a>
+    <p>Ropa y accesorios con identidad.</p>
+    <span>© 2026 Dorot. Todos los derechos reservados.</span>
+</footer>
+
+<div class="carrito-fondo" id="carrito-fondo"
      onclick="cerrarCarrito()"></div>
 
 <aside class="carrito-panel" id="carrito-panel">
 
     <div class="carrito-encabezado">
         <h2>Mi carrito</h2>
-
         <button class="carrito-cerrar"
-                onclick="cerrarCarrito()">
-            &times;
-        </button>
+                onclick="cerrarCarrito()">&times;</button>
     </div>
 
     <div id="carrito-productos"></div>
@@ -110,9 +122,9 @@
             Vaciar carrito
         </button>
     </div>
-
 </aside>
 
-<script src="carrito.js"></script>
+<script src="carrito.js?v=2" defer></script>
+
 </body>
 </html>
