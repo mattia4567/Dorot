@@ -1,4 +1,4 @@
-
+console.log("DOROT: CARRITO NUEVO CARGADO");
 // =====================================
 // DOROT - SISTEMA DE CARRITO
 // =====================================
@@ -158,17 +158,39 @@ function vaciarCarrito() {
 
 }
 
-// Finalizar compra
-function finalizarCompra() {
+async function finalizarCompra() {
 
     if (carrito.length === 0) {
         alert("Tu carrito está vacío.");
         return;
     }
 
-    alert("¡Gracias por elegir DOROT! Próximamente podrás finalizar tu compra.");
+    try {
 
+        const respuesta = await fetch("procesar_pedido.php", {
+            method: "POST"
+        });
+
+        const resultado = await respuesta.text();
+
+        if (!respuesta.ok) {
+            alert(resultado);
+            return;
+        }
+
+        carrito = [];
+        guardarCarrito();
+        actualizarCarrito();
+        cerrarCarrito();
+
+        alert(resultado);
+
+        window.location.href = "mis_pedidos.php";
+
+    } catch (error) {
+
+        console.error(error);
+        alert("No se pudo conectar con el servidor.");
+
+    }
 }
-
-// Actualizar al cargar cada página
-actualizarCarrito();

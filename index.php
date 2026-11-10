@@ -103,7 +103,7 @@ unset($_SESSION["mensaje_bienvenida"]);
     </main>
 
     <footer class="pie">
-        <a class="logo" href="index.html">✡ Dorot</a>
+        <a class="logo" href="index.php">✡ Dorot</a>
         <p>Ropa y accesorios con identidad.</p>
         <span>© 2026 Dorot. Todos los derechos reservados.</span>
     </footer>
